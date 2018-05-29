@@ -91,10 +91,10 @@ class DBQA:
             sim_score = tf.reduce_sum(qM * answer_pooled, axis=1, keep_dims=True)
 
         with tf.variable_scope('multi_perceptron_layer'):
-            mlp_inputs = tf.concat([question_pooled,  answer_pooled], -1)
-            mlp_inputs = tf.reshape(mlp_inputs, shape=[-1, q_size + a_size])
-           # mlp_inputs = tf.concat([question_pooled, sim_score, answer_pooled], -1)
-           # mlp_inputs = tf.reshape(mlp_inputs, shape=[-1, q_size + a_size + 1])
+            #mlp_inputs = tf.concat([question_pooled,  answer_pooled], -1)
+            #mlp_inputs = tf.reshape(mlp_inputs, shape=[-1, q_size + a_size])
+            mlp_inputs = tf.concat([question_pooled, sim_score, answer_pooled], -1)
+            mlp_inputs = tf.reshape(mlp_inputs, shape=[-1, q_size + a_size + 1])
             for i, mlp_unit in enumerate(mlp_units):
                 with tf.variable_scope('mlp_%d' % i):
                     mlp_outputs = tf.contrib.layers.legacy_fully_connected(
@@ -169,7 +169,7 @@ class DBQA:
             _, dim = map(int, fin.readline().split())
             # dim=100
             ret = [0. for _ in range(len(vocab2idx) + 2)]
-            ret[-1] = [0. for _ in range(dim)]
+            ret[-1] = [0.1 for _ in range(dim)]
             ret[-2] = [0.01 for _ in range(dim)]
             #ret[-2] = list(map(float, fin.readline().rstrip().split()[1:]))
             for line in tqdm(fin.readlines()):
